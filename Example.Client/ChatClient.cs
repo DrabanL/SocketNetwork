@@ -12,7 +12,7 @@ namespace SocketNetwork.Example.Client {
 
             ClientHandler = this;
             SerializationHandler = ChatMessageSerializer.Instance;
-            SocketHandler = Program.BufferManager;
+            EventHandler = Program.EventManager;
         }
 
         internal void SendJoin() {

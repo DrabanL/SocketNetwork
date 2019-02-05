@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Default\BufferManager.cs" />
+    <Compile Include="Default\SocketEventManager.cs" />
     <Compile Include="Default\EncryptedProtocolMessage.cs" />
     <Compile Include="Default\ProtocolMessage.cs" />
     <Compile Include="Default\MessageEncryption.cs" />
@@ -48,7 +48,7 @@
     <Compile Include="Models\IServerHandler.cs" />
     <Compile Include="SocketClient.cs" />
     <Compile Include="SocketServer.cs" />
-    <Compile Include="Models\ISocketHandler.cs" />
+    <Compile Include="Models\ISocketEventHandler.cs" />
     <Compile Include="Models\NetworkMessageHandler.cs" />
     <Compile Include="Models\IClientHandler.cs" />
     <Compile Include="Models\SocketOptions.cs" />

@@ -11,7 +11,7 @@ namespace SocketNetwork.Example.Server {
 
         public ChatServer() : base() {
             ServerHandler = this;
-            SocketHandler = Program.BufferManager;
+            EventHandler = Program.EventManager;
         }
 
         void IServerHandler.ConnectionAcceptError(SocketAsyncEventArgs e) {
@@ -25,7 +25,7 @@ namespace SocketNetwork.Example.Server {
 
             client.ClientHandler = this;
             client.SerializationHandler = ChatMessageSerializer.Instance;
-            client.SocketHandler = Program.BufferManager;
+            client.EventHandler = Program.EventManager;
             client.ReceiveAsync<ChatMessage>();
 
             Console.WriteLine($"(Server) client connected {client.Socket.RemoteEndPoint}");

@@ -4,14 +4,14 @@ using System.Threading;
 
 namespace SocketNetwork.Example.Client {
     internal class Program {
-        public static readonly BufferManager BufferManager = new BufferManager();
+        public static readonly SocketEventManager EventManager = new SocketEventManager();
 
         private static void Main(string[] args) {
             Console.WriteLine("Nickname: ");
             var nickname = Console.ReadLine();
             Console.Title = nickname;
 
-            using (BufferManager)
+            using (EventManager)
             using (var chatClient = new ChatClient(nickname)) {
                 Console.WriteLine("connecting to server..");
 
