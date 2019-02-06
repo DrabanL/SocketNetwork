@@ -8,6 +8,9 @@ namespace SocketNetwork.Default {
     /// Managed a pool of SocketAsyncEventArgs to be effeciently re-used.
     /// </summary>
     public class SocketEventManager : ISocketEventHandler, IDisposable {
+        /// <summary>
+        /// Internal queue that manages the available SocketAsyncEventArgs objects.
+        /// </summary>
         private Queue<SocketAsyncEventArgs> _pool;
 
         /// <summary>

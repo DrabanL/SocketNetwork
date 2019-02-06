@@ -48,7 +48,7 @@ namespace SocketNetwork {
             socketEvent.Completed += SocketEvent_Completed;
 
             if (!Socket.AcceptAsync(socketEvent))
-                // the operation completed synchronously, so invoke the callback immidietly
+                // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
                 SocketEvent_Completed(Socket, socketEvent);
         }
 

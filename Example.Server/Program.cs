@@ -3,6 +3,9 @@ using System;
 
 namespace SocketNetwork.Example.Server {
     internal class Program {
+        /// <summary>
+        /// Default pool based async socket event manager
+        /// </summary>
         public static readonly SocketEventManager EventManager = new SocketEventManager();
 
         private static void Main(string[] args) {

@@ -84,7 +84,7 @@ namespace SocketNetwork.Example.Server {
                     sendAllMessage(message.Sender, message.Text);
                     break;
                 case OpCodes.ConversationLeave:
-                    //sendAllMessage("Officer", $"{message.Sender} has left the conversation.", message.Sender);
+                    onConnectionClosed(client);
                     break;
             }
         }

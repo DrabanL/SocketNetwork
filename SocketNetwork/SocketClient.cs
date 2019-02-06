@@ -47,7 +47,7 @@ namespace SocketNetwork {
             socketEvent.RemoteEndPoint = new DnsEndPoint(host, port);
 
             if (!Socket.ConnectAsync(socketEvent))
-                // the operation completed synchronously, so invoke the callback immidietly
+                // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
                 SocketEvent_Completed(Socket, socketEvent);
         }
 
@@ -102,6 +102,11 @@ namespace SocketNetwork {
 
                 // message has been processed, so handler can be resetted
                 messageHandler.Reset();
+            }
+
+            if (!Socket.Connected) {
+                // socket has been disconnected, so can free it up
+                return true;
             }
 
             // resume receive
@@ -184,7 +189,7 @@ namespace SocketNetwork {
                 messageHandler.Length);
 
             if (!Socket.ReceiveAsync(socketEvent))
-                // the operation completed synchronously, so invoke the callback immidietly
+                // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
                 SocketEvent_Completed(Socket, socketEvent);
         }
 
@@ -212,7 +217,7 @@ namespace SocketNetwork {
             socketEvent.SetBuffer(message.Buffer, message.Offset, message.Length);
 
             if (!Socket.SendAsync(socketEvent))
-                // the operation completed synchronously, so invoke the callback immidietly
+                // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
                 SocketEvent_Completed(Socket, socketEvent);
         }
 
@@ -230,7 +235,7 @@ namespace SocketNetwork {
             socketEvent.Completed += SocketEvent_Completed;
 
             if (!Socket.DisconnectAsync(socketEvent))
-                // the operation completed synchronously, so invoke the callback immidietly
+                // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
                 SocketEvent_Completed(Socket, socketEvent);
         }
     }
