@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace SocketNetwork.Example.Client {
     /// <summary>
-    /// Manages the chat client communication with server by extending <see cref="SocketClient"/>.
+    /// Manages the chat client communication with server by extending <see cref="SocketClient"/> and implementing <see cref="IClientHandler"/>.
     /// </summary>
     internal class ChatClient : SocketClient, IClientHandler {
         /// <summary>
