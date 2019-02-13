@@ -162,6 +162,10 @@ namespace SocketNetwork {
                 // EventHandler must be implemented to accuire connect event
                 throw new ArgumentNullException(nameof(EventHandler));
 
+            if (SerializationHandler == null)
+                // SerializationHandler must be implemented to transform the network message from binary data to T
+                throw new ArgumentNullException(nameof(SerializationHandler));
+
             // get socket event for the operation
             var socketEvent = EventHandler.GetSocketEvent();
 
@@ -200,6 +204,10 @@ namespace SocketNetwork {
             if (EventHandler == null)
                 // EventHandler must be implemented to accuire connect event
                 throw new ArgumentNullException(nameof(EventHandler));
+
+            if (SerializationHandler == null)
+                // SerializationHandler must be implemented to transform the network message into binary data
+                throw new ArgumentNullException(nameof(SerializationHandler));
 
             // transform the network message into raw data and apply finalization (for encryption of data etc)
             message.SetFinalized(SerializationHandler.Serialize(message));

@@ -1,4 +1,5 @@
-﻿using SocketNetwork.Models;
+﻿using SocketNetwork.Default;
+using SocketNetwork.Models;
 using System;
 using System.Net.Sockets;
 
@@ -69,7 +70,7 @@ namespace SocketNetwork.Internals {
             }
 
             // The communication operation completed, so free up the event object
-            EventHandler?.ReturnSocketEvent(e);
+            EventHandler.ReturnSocketEvent(e);
         }
 
         /// <summary>
