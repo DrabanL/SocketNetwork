@@ -132,7 +132,7 @@ namespace SocketNetwork {
             // process the sent data in the message handler
             if (!messageHandler.CompleteSend(e.BytesTransferred)) {
                 // continue the send operation
-                receiveAsync(e);
+                sendAsync(e);
                 return false;
             }
 
@@ -218,11 +218,24 @@ namespace SocketNetwork {
             // UserToken should contain the the implementation to manage the NetworkMessage
             socketEvent.UserToken = message;
 
+            sendAsync(socketEvent);
+        }
+
+        /// <summary>
+        /// Begins async send on <see cref="Socket"/> 
+        /// </summary>
+        private void sendAsync(SocketAsyncEventArgs socketEvent) {
+            // UserToken should contain the the implementation to manage the NetworkMessage
+            var messageHandler = socketEvent.UserToken as NetworkMessageHandler;
+
             // register the callback
             socketEvent.Completed += SocketEvent_Completed;
 
-            // initialize the buffer to send
-            socketEvent.SetBuffer(message.Buffer, message.Offset, message.Length);
+            // initialize the buffer to send, allowing partial send by instructions from messageHandler properties
+            socketEvent.SetBuffer(
+                messageHandler.Buffer, 
+                messageHandler.Offset, 
+                messageHandler.Length);
 
             if (!Socket.SendAsync(socketEvent))
                 // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
