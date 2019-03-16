@@ -71,6 +71,7 @@ namespace SocketNetwork {
         internal override bool processClientReceive(SocketAsyncEventArgs e) {
             switch (e.SocketError) {
                 case SocketError.ConnectionReset:
+                case SocketError.ConnectionAborted:
                     // ConnectionReset is raised when the connection was closed - no reason to continue receive
                     ClientHandler?.ConnectionClosed(this);
                     return true;

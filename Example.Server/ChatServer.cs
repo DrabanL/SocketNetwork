@@ -1,4 +1,5 @@
-﻿using SocketNetwork.Example.Utilities.Models;
+﻿using SocketNetwork.Example.Utilities;
+using SocketNetwork.Example.Utilities.Models;
 using SocketNetwork.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace SocketNetwork.Example.Server {
         /// <summary>
         /// Stores all managed connections (participants in the chat conversation).
         /// </summary>
-        private readonly List<ChatMember> _clients = new List<ChatMember>();
+        private readonly ThreadSafeList<ChatMember> _clients = new ThreadSafeList<ChatMember>();
 
         /// <summary>
         /// Initializes the server object and registers handlers.
