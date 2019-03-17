@@ -56,26 +56,15 @@ namespace SocketNetwork.Example.Client {
 
             return true;
         }
-
-        /// <summary>
-        /// Sends a 'Leave' protocol command to chat server for notification and graceful closure of the connection. Returns false if socket is not connected. otherwise true.
-        /// </summary>
-        internal void SendLeave(string nickname) {
-            if (!Socket.Connected)
-                // the socket may have been closed previously but it was not managed in input context
-                return;
-
-            SendAsync(new ChatMessage() { // construct a new ChatMessage object that extends NetworkMessageHandler
-                OpCode = (byte)OpCodes.ConversationLeave,
-                Sender = nickname // the nickname that the user has chosen
-            });
-        }
-
+        
         /// <summary>
         /// Processes the closed chat client connection.
         /// </summary>
         private void onConnectionClosed(ChatClient client) {
             Console.WriteLine("server connection closed");
+
+            // make sure the socket is shut down
+            Shutdown();
         }
 
         /// <summary>
@@ -93,13 +82,12 @@ namespace SocketNetwork.Example.Client {
         /// Processes the error that occured in the async operation.
         /// </summary>
         private void onConnectionError(ChatClient client, SocketAsyncEventArgs socketEvent) {
-            if (disposedValue)
-                // the internal Socket is being closed when disposing, so error on ongoing 'receive' operation may raise, so it should be ignored
-                return;
+            Console.WriteLine($"{socketEvent.LastOperation} operation error! {socketEvent.SocketError}");
 
-            // error in the socket event likely breaks the entire socket, so make sure to cleanup
-            using (this) {
-                Console.WriteLine($"operation error! {socketEvent.LastOperation} {socketEvent.SocketError}");
+            if (socketEvent.SocketError == SocketError.MessageSize) {
+                Console.WriteLine("Message size limit reached.");
+
+                client.Shutdown();
             }
         }
 

@@ -3,6 +3,7 @@ using SocketNetwork.Models;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace SocketNetwork {
     /// <summary>
@@ -12,6 +13,11 @@ namespace SocketNetwork {
 
         public IClientHandler ClientHandler;
         public INetworkMessageSerializationHandler SerializationHandler;
+
+        /// <summary>
+        /// Wait handle that resets when Connect task is completed.
+        /// </summary>
+        public readonly ManualResetEvent ConnectTaskCompleteSignal = new ManualResetEvent(false);
 
         /// <summary>
         /// Initializes <see cref="Socket"/> with default options to prepare it for first use.
@@ -52,26 +58,39 @@ namespace SocketNetwork {
         }
 
         /// <summary>
-        /// Implements the disconnect method to process connected connetion.
+        /// Implements the connect method to process connected connetion.
         /// </summary>
         internal override void processClientConnect(SocketAsyncEventArgs e) {
-            if (e.SocketError != SocketError.Success) {
-                // invoke the client handler to process the error in the implementation
-                ClientHandler?.ConnectionError(this, e);
-                return;
-            }
+            try {
+                if (e.SocketError != SocketError.Success) {
+                    // invoke the client handler to process the error in the implementation
+                    ClientHandler?.ConnectionError(this, e);
+                    return;
+                }
 
-            // invoke the client handler to process the event in the implementation
-            ClientHandler?.ConnectionOpened(this);
+                // invoke the client handler to process the event in the implementation
+                ClientHandler?.ConnectionOpened(this);
+            } finally {
+                // signal the waiter
+                ConnectTaskCompleteSignal.Set();
+            }
         }
 
         /// <summary>
         /// Implements the receive method to process received data from <see cref="Socket"/>.
+        /// Returns true to free up SocketAsyncEventArgs.
         /// </summary>
         internal override bool processClientReceive(SocketAsyncEventArgs e) {
+            if (e.BytesTransferred == 0) {
+                // BytesTransferred = 0 means connection was closed
+                ClientHandler?.ConnectionClosed(this);
+                return true;
+            }
+
             switch (e.SocketError) {
                 case SocketError.ConnectionReset:
                 case SocketError.ConnectionAborted:
+                case SocketError.OperationAborted:
                     // ConnectionReset is raised when the connection was closed - no reason to continue receive
                     ClientHandler?.ConnectionClosed(this);
                     return true;
@@ -94,7 +113,7 @@ namespace SocketNetwork {
 
                 // invoke the client handler to process the error in the implementation
                 ClientHandler?.ConnectionError(this, e);
-                return false;
+                return true;
             }
 
             if ((bool)isReceiveCompleted) {
@@ -103,11 +122,6 @@ namespace SocketNetwork {
 
                 // message has been processed, so handler can be resetted
                 messageHandler.Reset();
-            }
-
-            if (!Socket.Connected) {
-                // socket has been disconnected, so can free it up
-                return true;
             }
 
             // resume receive
@@ -119,8 +133,13 @@ namespace SocketNetwork {
 
         /// <summary>
         /// Implements the send method to process sent data to <see cref="Socket"/>.
+        /// Returns true to free up SocketAsyncEventArgs.
         /// </summary>
         internal override bool processClientSend(SocketAsyncEventArgs e) {
+            if (e.BytesTransferred == 0)
+                // BytesTransferred = 0 means connection was closed
+                return true;
+
             if (e.SocketError != SocketError.Success) {
                 // invoke the client handler to process the error in the implementation
                 ClientHandler?.ConnectionError(this, e);
@@ -132,27 +151,13 @@ namespace SocketNetwork {
 
             // process the sent data in the message handler
             if (!messageHandler.CompleteSend(e.BytesTransferred)) {
-                // continue the send operation
+                // return false, to continue the send operation on the SocketAsyncEventArgs
                 sendAsync(e);
                 return false;
             }
 
             // the send operation completed, so can return true to release the event object
             return true;
-        }
-
-        /// <summary>
-        /// Implements the disconnect method to process disconnected connetion.
-        /// </summary>
-        internal override void processClientDisconnect(SocketAsyncEventArgs e) {
-            if (e.SocketError != SocketError.Success) {
-                // invoke the client handler to process the error in the implementation
-                ClientHandler?.ConnectionError(this, e);
-                return;
-            }
-
-            // invoke the client handler to process the event in the implementation
-            ClientHandler?.ConnectionClosed(this);
         }
 
         /// <summary>
@@ -244,21 +249,16 @@ namespace SocketNetwork {
         }
 
         /// <summary>
-        /// Begins a disconnect operation on <see cref="Socket"/>.
+        /// Signal both connected ends if socket closure
         /// </summary>
-        public void DisconnectAsync() {
-            if (EventHandler == null)
-                // EventHandler must be implemented to accuire connect event
-                throw new ArgumentNullException(nameof(EventHandler));
+        public void Shutdown() {
+            Socket.Shutdown(SocketShutdown.Both);
+        }
 
-            var socketEvent = EventHandler.GetSocketEvent();
+        internal override void disposeManagedObjects() {
+            base.disposeManagedObjects();
 
-            // register the callback
-            socketEvent.Completed += SocketEvent_Completed;
-
-            if (!Socket.DisconnectAsync(socketEvent))
-                // the operation completed synchronously probably due to some error, so invoke the callback immidietly to process the result
-                SocketEvent_Completed(Socket, socketEvent);
+            using (ConnectTaskCompleteSignal) ;
         }
     }
 }

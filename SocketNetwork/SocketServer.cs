@@ -55,7 +55,7 @@ namespace SocketNetwork {
         /// <summary>
         /// Terminates the listener. (<see cref="SocketServer"/> cannot be reused afterwards)
         /// </summary>
-        public void Stop() {
+        public virtual void Stop() {
             Socket.Close();
         }
 
@@ -63,6 +63,10 @@ namespace SocketNetwork {
         /// Implements the accept method to process incoming socket connections.
         /// </summary>
         internal override void processServerAccept(SocketAsyncEventArgs e) {
+            if (e.SocketError == SocketError.OperationAborted)
+                // socket closed
+                return;
+
             try {
                 if (e.SocketError != SocketError.Success) {
                     // invoke the client handler to process the error in the implementation

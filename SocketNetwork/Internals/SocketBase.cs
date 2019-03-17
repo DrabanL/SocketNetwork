@@ -61,9 +61,6 @@ namespace SocketNetwork.Internals {
                         // there is still data to be processed, the send operation on the event object is not done yet
                         return;
                     break;
-                case SocketAsyncOperation.Disconnect:
-                    processClientDisconnect(e);
-                    break;
                 case SocketAsyncOperation.Accept:
                     processServerAccept(e);
                     break;
@@ -72,11 +69,6 @@ namespace SocketNetwork.Internals {
             // The communication operation completed, so free up the event object
             EventHandler.ReturnSocketEvent(e);
         }
-
-        /// <summary>
-        /// Handles the SocketAsyncOperation.Disconnect event.
-        /// </summary>
-        internal virtual void processClientDisconnect(SocketAsyncEventArgs e) { }
 
         /// <summary>
         /// Handles the SocketAsyncOperation.Send event. Returns true if the socket event can be freed up.
@@ -101,7 +93,7 @@ namespace SocketNetwork.Internals {
         /// <summary>
         /// Cleans up locally managed objects.
         /// </summary>
-        private void disposeManagedObjects() {
+        internal virtual void disposeManagedObjects() {
             try {
                 using (Socket)
                     // Close the socket if its not already closed

@@ -31,13 +31,15 @@ namespace SocketNetwork.Example.Server {
         /// Handle error on async accept operation.
         /// </summary>
         void IServerHandler.ConnectionAcceptError(SocketAsyncEventArgs e) {
-            Console.WriteLine($"Server accept error! {e.SocketError}");
+            Console.WriteLine($"accept error! {e.SocketError}");
         }
 
         /// <summary>
         /// Handle received connection on the socket object.
         /// </summary>
         void IServerHandler.ConnectionAccepted(Socket socket) {
+            Console.WriteLine($"client {socket.RemoteEndPoint} connected");
+
             // create new chat member from received socket
             var client = new ChatMember(socket);
 
@@ -55,8 +57,6 @@ namespace SocketNetwork.Example.Server {
 
             // begin receving data from chat member, in a ChatMessage object that extends NetworkMessageHandler
             client.ReceiveAsync<ChatMessage>();
-
-            Console.WriteLine($"(Server) client connected {client.Socket.RemoteEndPoint}");
         }
 
         /// <summary>
@@ -91,33 +91,28 @@ namespace SocketNetwork.Example.Server {
         /// Processes the closed chat member connection.
         /// </summary>
         private void onConnectionClosed(ChatMember client) {
-            // make sure the connection is properly disposed
-            using (client) {
-                // notify all participants of the leave (excluding the member that left)
-                sendAllMessage("Officer", $"{client.Name} has left the conversation.", client.Name);
+            Console.WriteLine($"client {client.Socket.RemoteEndPoint} disconnected");
 
+            // make sure the connection is properly disposed
+            using (client)
                 // remove the member from managed connections
                 _clients.Remove(client);
 
-                Console.WriteLine($"(Server) client disconnected {client.Socket.RemoteEndPoint}");
-            }
+            // notify all participants of the leave (excluding the member that left)
+            sendAllMessage("Officer", $"{client.Name} has left the conversation.", client.Name);
         }
 
         /// <summary>
         /// Processes the error that occured in the async operation.
         /// </summary>
         private void onConnectionError(ChatMember client, SocketAsyncEventArgs socketEvent) {
-            Console.WriteLine($"(Server) client {socketEvent.LastOperation} socket error: {socketEvent.SocketError}");
+            Console.WriteLine($"client {client?.Socket?.RemoteEndPoint} socket operation {socketEvent.LastOperation} error: {socketEvent.SocketError}");
 
-            // check if we already registered the connection as a chat member
-            if (!_clients.Contains(client)) {
-                // unhandled error possibly destroyed the connection, so close it and cleanup
-                using (client) ;
-                return;
+            if (socketEvent.SocketError == SocketError.MessageSize) {
+                Console.WriteLine("Message size limit reached.");
+
+                client.Shutdown();
             }
-            
-            // unhandled error possibly destroyed the connection, so close it and cleanup
-            onConnectionClosed(client);
         }
 
         /// <summary>
@@ -138,10 +133,6 @@ namespace SocketNetwork.Example.Server {
                 case OpCodes.ConversationMessage:
                     // forward the chat message to all participants in the conversation
                     sendAllMessage(message.Sender, message.Text);
-                    break;
-                case OpCodes.ConversationLeave:
-                    // gracefully close the connection with the participant
-                    onConnectionClosed(client);
                     break;
             }
         }
@@ -174,19 +165,13 @@ namespace SocketNetwork.Example.Server {
             // SocketClient is actually ChatMember so it can be casted to our own type
             => onConnectionMessage(client as ChatMember, message as ChatMessage);
 
-        /// <summary>
-        /// Overrides dispose of base class to handle disposing of local objects.
-        /// </summary>
-        protected override void Dispose(bool disposing) {
-            // make sure all connections are closed and disposed
+        public override void Stop() {
+            base.Stop();
+
+            // make sure all connections are notified of server close
             foreach (var client in _clients)
-                // socket closure is handled in ChatMemeber object dispose
-                using (client) ;
-
-            _clients.Clear();
-
-            // continue dispose on base object
-            base.Dispose(disposing);
+                // signal the cleint to end the connection on its end
+                client.Shutdown();
         }
     }
 }
