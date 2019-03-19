@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace SocketNetwork.Models {
+namespace RabanSoft.SocketNetwork.Models {
     /// <summary>
     /// Handles socket client event operations.
     /// </summary>

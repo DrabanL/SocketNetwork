@@ -1,11 +1,11 @@
-﻿using SocketNetwork.Internals;
-using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Internals;
+using RabanSoft.SocketNetwork.Models;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace SocketNetwork {
+namespace RabanSoft.SocketNetwork {
     /// <summary>
     /// Socket client implementation based on <see cref="SocketBase"/>.
     /// </summary>
@@ -239,8 +239,8 @@ namespace SocketNetwork {
 
             // initialize the buffer to send, allowing partial send by instructions from messageHandler properties
             socketEvent.SetBuffer(
-                messageHandler.Buffer, 
-                messageHandler.Offset, 
+                messageHandler.Buffer,
+                messageHandler.Offset,
                 messageHandler.Length);
 
             if (!Socket.SendAsync(socketEvent))

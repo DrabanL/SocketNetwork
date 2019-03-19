@@ -1,4 +1,4 @@
-﻿namespace SocketNetwork.Example.Utilities.Models {
+﻿namespace RabanSoft.SocketNetwork.Example.Utilities.Models {
     /// <summary>
     /// Defines the supported chat protocol functionalities.
     /// </summary>

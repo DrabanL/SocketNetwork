@@ -1,9 +1,9 @@
-﻿using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
-namespace SocketNetwork.Default {
+namespace RabanSoft.SocketNetwork.Default {
     /// <summary>
     /// Managed a pool of SocketAsyncEventArgs to be effeciently re-used.
     /// </summary>
@@ -21,7 +21,7 @@ namespace SocketNetwork.Default {
         /// <summary>
         /// The initial defined pool size.
         /// </summary>
-        private int _basePoolSize;
+        private readonly int _basePoolSize;
 
         /// <summary>
         /// Initializes the SocketAsyncEventArgs pool.
@@ -59,7 +59,7 @@ namespace SocketNetwork.Default {
             if (disposedValue) {
                 // the class have been destroyed, so cleanup and return
                 using (e) ;
-                    return;
+                return;
             }
 
             // return the SocketAsyncEventArgs to the pool for re-use.

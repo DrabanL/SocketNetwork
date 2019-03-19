@@ -1,6 +1,6 @@
-﻿using SocketNetwork.Default;
+﻿using RabanSoft.SocketNetwork.Default;
 
-namespace SocketNetwork.Example.Utilities.Models {
+namespace RabanSoft.SocketNetwork.Example.Utilities.Models {
     /// <summary>
     /// Chat System Protocol message object that extends <see cref="EncryptedProtocolMessage"/> with properites relevant for the chat system.
     /// </summary>

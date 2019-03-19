@@ -1,4 +1,4 @@
-﻿namespace SocketNetwork.Models {
+﻿namespace RabanSoft.SocketNetwork.Models {
     /// <summary>
     /// Handles transformation of raw data to and from network message object.
     /// </summary>

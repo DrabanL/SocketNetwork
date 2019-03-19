@@ -7,3 +7,9 @@
 /Example.Server/obj/Debug
 /Example.Utilities/obj/Debug
 /SocketNetwork/obj/Debug
+/Example.Server/obj/Release
+/Example.Client/obj/Release
+/Example.Utilities/obj/Release
+/SocketNetwork/obj/Release
+*.nuspec
+*.nupkg

@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace SocketNetwork.Example.Server {
+namespace RabanSoft.SocketNetwork.Example.Server {
     /// <summary>
     /// Extends <see cref="SocketClient"/> and implements chat member properties.
     /// </summary>

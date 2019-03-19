@@ -1,9 +1,9 @@
-﻿using SocketNetwork.Example.Utilities.Models;
-using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Example.Utilities.Models;
+using RabanSoft.SocketNetwork.Models;
 using System;
 using System.Net.Sockets;
 
-namespace SocketNetwork.Example.Client {
+namespace RabanSoft.SocketNetwork.Example.Client {
     /// <summary>
     /// Manages the chat client communication with server by extending <see cref="SocketClient"/> and implementing <see cref="IClientHandler"/>.
     /// </summary>
@@ -56,7 +56,7 @@ namespace SocketNetwork.Example.Client {
 
             return true;
         }
-        
+
         /// <summary>
         /// Processes the closed chat client connection.
         /// </summary>

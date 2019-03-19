@@ -1,9 +1,9 @@
-﻿using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SocketNetwork.Default {
+namespace RabanSoft.SocketNetwork.Default {
     /// <summary>
     /// Simple protcol message format structured as:
     /// <para>[0..3] Length (uint)</para>
@@ -24,7 +24,7 @@ namespace SocketNetwork.Default {
         /// <summary>
         /// The maximum allowed size of a complete message.
         /// </summary>
-        private uint _maxMessageSize;
+        private readonly uint _maxMessageSize;
 
         public ProtocolMessage(int bufferSize = 512, uint maxMessageSize = 0x1024) {
             _maxMessageSize = maxMessageSize;

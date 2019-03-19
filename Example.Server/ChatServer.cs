@@ -1,12 +1,11 @@
-﻿using SocketNetwork.Example.Utilities;
-using SocketNetwork.Example.Utilities.Models;
-using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Example.Utilities;
+using RabanSoft.SocketNetwork.Example.Utilities.Models;
+using RabanSoft.SocketNetwork.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace SocketNetwork.Example.Server {
+namespace RabanSoft.SocketNetwork.Example.Server {
     /// <summary>
     /// Manages chat server by extending <see cref="SocketServer"/> and handles its connection/protocol with clients by implementing <see cref="IServerHandler"/> and <seealso cref="IClientHandler"/>.
     /// </summary>

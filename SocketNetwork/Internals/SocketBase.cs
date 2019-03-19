@@ -1,9 +1,8 @@
-﻿using SocketNetwork.Default;
-using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Models;
 using System;
 using System.Net.Sockets;
 
-namespace SocketNetwork.Internals {
+namespace RabanSoft.SocketNetwork.Internals {
     /// <summary>
     /// A base socket class that represent the foundation of either a Client or a Server and host any objects and implementation relevent to both functions.
     /// </summary>

@@ -1,10 +1,10 @@
-﻿using SocketNetwork.Internals;
-using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Internals;
+using RabanSoft.SocketNetwork.Models;
 using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace SocketNetwork {
+namespace RabanSoft.SocketNetwork {
     /// <summary>
     /// Socket server implementation based on <see cref="SocketBase"/>.
     /// </summary>

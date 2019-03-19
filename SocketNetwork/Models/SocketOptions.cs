@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace SocketNetwork.Models {
+namespace RabanSoft.SocketNetwork.Models {
     /// <summary>
     /// Container for the socket options to use when constucting a Socket object.
     /// </summary>

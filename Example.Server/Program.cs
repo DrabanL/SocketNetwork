@@ -1,7 +1,7 @@
-﻿using SocketNetwork.Default;
+﻿using RabanSoft.SocketNetwork.Default;
 using System;
 
-namespace SocketNetwork.Example.Server {
+namespace RabanSoft.SocketNetwork.Example.Server {
     internal class Program {
         /// <summary>
         /// Default pool based async socket event manager

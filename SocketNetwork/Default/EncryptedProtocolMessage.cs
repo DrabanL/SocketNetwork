@@ -1,4 +1,4 @@
-﻿namespace SocketNetwork.Default {
+﻿namespace RabanSoft.SocketNetwork.Default {
     /// <summary>
     /// Simple XOR obfuscation implementation on top of <see cref="ProtocolMessage"/>
     /// </summary>

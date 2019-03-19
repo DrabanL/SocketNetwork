@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace SocketNetwork.Models {
+namespace RabanSoft.SocketNetwork.Models {
     /// <summary>
     /// Defines a method for managing the AsyncEvent objects.
     /// </summary>

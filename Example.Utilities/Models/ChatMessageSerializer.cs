@@ -1,8 +1,8 @@
-﻿using SocketNetwork.Models;
+﻿using RabanSoft.SocketNetwork.Models;
 using System.IO;
 using System.Text;
 
-namespace SocketNetwork.Example.Utilities.Models {
+namespace RabanSoft.SocketNetwork.Example.Utilities.Models {
     /// <summary>
     /// Chat System Protocol message serialization implementation that extends <see cref="INetworkMessageSerializationHandler"/>.
     /// The message structure is as follows:
@@ -56,7 +56,7 @@ namespace SocketNetwork.Example.Utilities.Models {
                 return (writer.BaseStream as MemoryStream).ToArray();
             }
         }
-        
+
         NetworkMessageHandler INetworkMessageSerializationHandler.Deserialize(byte[] message)
             // cast return object to the base class
             => onDeserialize(message);

@@ -1,4 +1,4 @@
-﻿namespace SocketNetwork.Default {
+﻿namespace RabanSoft.SocketNetwork.Default {
     /// <summary>
     /// Includes functions related to encryption of a <see cref="SocketNetwork.Internals.SocketBase"/> message.
     /// </summary>
